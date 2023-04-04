@@ -5,14 +5,14 @@ export function Pagination({ onNextPage, onPreviousPage, currentPage }) {
   return (
     <>
       <Button
-        variant="contained"
+        variant="outlined"
         onClick={onPreviousPage}
         disabled={currentPage === 1}
       >
         Previous
       </Button>
-      <Typography sx={{ mx: 2 }}>{currentPage}</Typography>
-      <Button variant="contained" onClick={onNextPage}>
+      <Typography sx={{ mx: 2, my: 2 }}>{currentPage}</Typography>
+      <Button variant="outlined" onClick={onNextPage}>
         Next
       </Button>
     </>

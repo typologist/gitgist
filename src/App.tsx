@@ -11,6 +11,9 @@ import {
 import Gist from "./Gist";
 import { makeGetRequest } from "./request";
 import { Pagination } from "./Pagination";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme();
 
 function App() {
   const [gists, setGists] = React.useState([]);
@@ -25,7 +28,7 @@ function App() {
       ? `https://api.github.com/users/${searchText}/gists`
       : `https://api.github.com/gists/public`;
 
-    makeGetRequest(endpoint, { page: pageNumber, per_page: 10 })
+    makeGetRequest(endpoint, { page: pageNumber, per_page: 9 })
       .then((response) => {
         const gists = response.data;
         setGists(gists);
@@ -66,40 +69,58 @@ function App() {
   };
 
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h4" mb={2}>
-        Public Gists
-      </Typography>
-      <Box sx={{ display: "flex", mb: 2 }}>
-        <TextField
-          label="Search"
-          variant="outlined"
-          size="small"
-          sx={{ mr: 2 }}
-          value={searchText}
-          onChange={handleSearchInputChange}
-          onKeyDown={handleSearchInputKeyDown}
-        />
-        <Button variant="contained" onClick={handleSearchButtonClick}>
-          Search
-        </Button>
-      </Box>
-      {loading && <LinearProgress />}
-      <Grid container spacing={2}>
-        {gists.map((gist: any) => (
-          <Grid key={gist.id} item xs={12} md={6} lg={4}>
-            <Gist gist={gist} />
+    <ThemeProvider theme={theme}>
+      <Container
+        maxWidth={false}
+        sx={{
+          backgroundColor: (theme) => theme.palette.grey[100],
+          flexGrow: 1,
+          height: "100vh",
+          overflow: "auto",
+          py: 4,
+        }}
+      >
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid item xs={3}>
+            <Box sx={{ display: "flex", my: 6 }}>
+              <TextField
+                label="Enter a username"
+                variant="outlined"
+                size="small"
+                sx={{ mr: 1 }}
+                value={searchText}
+                onChange={handleSearchInputChange}
+                onKeyDown={handleSearchInputKeyDown}
+              />
+              <Button variant="contained" onClick={handleSearchButtonClick}>
+                Search Gists
+              </Button>
+            </Box>
           </Grid>
-        ))}
-      </Grid>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        <Pagination
-          currentPage={currentPage}
-          onNextPage={handleNextPageButtonClick}
-          onPreviousPage={handlePreviousPageButtonClick}
-        />
-      </Box>
-    </Container>
+        </Grid>
+
+        {loading && <LinearProgress />}
+        <Grid container spacing={2}>
+          {gists.map((gist: any) => (
+            <Grid key={gist.id} item xs={12} md={4}>
+              <Gist gist={gist} />
+            </Grid>
+          ))}
+        </Grid>
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          <Pagination
+            currentPage={currentPage}
+            onNextPage={handleNextPageButtonClick}
+            onPreviousPage={handlePreviousPageButtonClick}
+          />
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Avatar, Box, Chip, Link, Typography } from "@mui/material";
+import { Avatar, Box, Chip, Link, Paper, Typography } from "@mui/material";
 import { makeGetRequest } from "./request";
 
 function Gist({ gist }) {
@@ -24,31 +24,58 @@ function Gist({ gist }) {
     const uniqueFileTypes = [...new Set(fileTypes)];
 
     return uniqueFileTypes.map((fileType) => (
-      <Chip key={fileType} label={fileType} size="small" />
+      <Chip key={fileType} label={fileType} size="small" sx={{ mr: 1 }} />
     ));
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-      <Box>
-        <Typography variant="subtitle2" gutterBottom>
-          {name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {description}
-        </Typography>
-        <Box mt={1}>{getTagsFromFiles(gist.files)}</Box>
-      </Box>
-      <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-        {forks.map((fork: any) => (
-          <Box key={fork.id} sx={{ ml: 1 }}>
-            <Link href={fork.html_url} target="_blank">
-              <Avatar src={fork.owner.avatar_url} alt={fork.owner.login} />
-            </Link>
+    <Paper
+      variant="outlined"
+      sx={{
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 140,
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+        <Box>
+          <Typography variant="subtitle1" gutterBottom>
+            {name}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+          <Box mt={1}>{getTagsFromFiles(gist.files)}</Box>
+        </Box>
+        {forks.length ? (
+          <Box sx={{ ml: "auto", display: "flex", flexDirection: "column" }}>
+            <Box>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                gutterBottom
+                textAlign={"right"}
+              >
+                Forked by:
+              </Typography>
+            </Box>
+            <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+              {forks.map((fork: any) => (
+                <Box key={fork.id} sx={{ ml: 1 }}>
+                  <Link href={fork.html_url} target="_blank">
+                    <Avatar
+                      src={fork.owner.avatar_url}
+                      alt={fork.owner.login}
+                    />
+                  </Link>
+                </Box>
+              ))}
+            </Box>
           </Box>
-        ))}
+        ) : null}
       </Box>
-    </Box>
+    </Paper>
   );
 }
 

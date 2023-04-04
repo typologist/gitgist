@@ -18,12 +18,13 @@ function App() {
   const [loading, setLoading] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  React.useEffect(() => {
+  const fetchGists = (pageNumber) => {
     setLoading(true);
+    const endpoint = !!searchText
+      ? `https://api.github.com/users/${searchText}/gists`
+      : `https://api.github.com/gists/public`;
 
-    makeGetRequest(
-      `https://api.github.com/gists/public?page=${currentPage}&per_page=10`
-    )
+    makeGetRequest(endpoint, { page: pageNumber, per_page: 10 })
       .then((response) => {
         const gists = response.data;
         setGists(gists);
@@ -32,24 +33,17 @@ function App() {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  React.useEffect(() => {
+    fetchGists(currentPage);
   }, [currentPage]);
 
-  const handleSearchInputChange = (e) => setSearchText(e.target.value);
+  const handleSearchInputChange = (e) => setSearchText(e.target.value.trim());
 
   const handleSearch = () => {
-    setLoading(true);
-
-    makeGetRequest(
-      `https://api.github.com/gists/public?q=${searchText}&page=${currentPage}&per_page=10`
-    )
-      .then((response) => {
-        const gists = response.data;
-        setGists(gists);
-      })
-      .catch((error) => console.log(error))
-      .finally(() => {
-        setLoading(false);
-      });
+    setCurrentPage(1);
+    fetchGists(currentPage);
   };
 
   const handlePreviousPage = () => {
@@ -65,7 +59,7 @@ function App() {
   return (
     <Container sx={{ py: 4 }}>
       <Typography variant="h4" mb={2}>
-        List of Gists
+        Public Gists
       </Typography>
       <Box sx={{ display: "flex", mb: 2 }}>
         <TextField

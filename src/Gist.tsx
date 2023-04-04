@@ -4,15 +4,14 @@ import { makeGetRequest } from "./request";
 
 function Gist({ gist }) {
   const { files, description, forks_url } = gist;
-
   const [forks, setForks] = React.useState([]);
-  const name = Object.keys(files)[0] || "No name";
+  const name = Object.keys(files)[0] || "Untitled";
 
   React.useEffect(() => {
     makeGetRequest(forks_url)
       .then((response) => {
-        const forks = response.data.slice(0, 3);
-        setForks(forks);
+        const lastThreeForks = response.data.slice(0, 3);
+        setForks(lastThreeForks);
       })
       .catch((error) => console.log(error));
   }, [forks_url]);
@@ -43,7 +42,7 @@ function Gist({ gist }) {
       <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
         {forks.map((fork: any) => (
           <Box key={fork.id} sx={{ ml: 1 }}>
-            <Link href={fork.owner.html_url} target="_blank">
+            <Link href={fork.html_url} target="_blank">
               <Avatar src={fork.owner.avatar_url} alt={fork.owner.login} />
             </Link>
           </Box>

@@ -19,6 +19,7 @@ function App() {
   const [currentPage, setCurrentPage] = React.useState(1);
 
   const fetchGists = (pageNumber) => {
+    // TODO: Handle errors (ie. user not exists, etc)
     setLoading(true);
     const endpoint = !!searchText
       ? `https://api.github.com/users/${searchText}/gists`
@@ -39,20 +40,28 @@ function App() {
     fetchGists(currentPage);
   }, [currentPage]);
 
-  const handleSearchInputChange = (e) => setSearchText(e.target.value.trim());
+  const handleSearchInputChange = (e) => {
+    setSearchText(e.target.value.trim());
+  };
 
-  const handleSearch = () => {
+  const handleSearchButtonClick = () => {
     setCurrentPage(1);
     fetchGists(currentPage);
   };
 
-  const handlePreviousPage = () => {
+  const handleSearchInputKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchButtonClick();
+    }
+  };
+
+  const handlePreviousPageButtonClick = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
-  const handleNextPage = () => {
+  const handleNextPageButtonClick = () => {
     setCurrentPage(currentPage + 1);
   };
 
@@ -69,8 +78,9 @@ function App() {
           sx={{ mr: 2 }}
           value={searchText}
           onChange={handleSearchInputChange}
+          onKeyDown={handleSearchInputKeyDown}
         />
-        <Button variant="contained" onClick={handleSearch}>
+        <Button variant="contained" onClick={handleSearchButtonClick}>
           Search
         </Button>
       </Box>
@@ -85,8 +95,8 @@ function App() {
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
           currentPage={currentPage}
-          onNextPage={handleNextPage}
-          onPreviousPage={handlePreviousPage}
+          onNextPage={handleNextPageButtonClick}
+          onPreviousPage={handlePreviousPageButtonClick}
         />
       </Box>
     </Container>

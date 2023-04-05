@@ -28,7 +28,7 @@ function GistList() {
   };
 
   React.useEffect(() => {
-    fetchGists(currentPage);
+    fetchGists(currentPage, searchText);
   }, [currentPage]);
 
   const handleSearchInputChange = (e) => {

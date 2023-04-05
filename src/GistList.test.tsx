@@ -15,7 +15,7 @@ describe("GistList component", () => {
 
   it("fetches gists on initial render", () => {
     render(<GistList />);
-    expect(fetchGists).toHaveBeenCalledWith(1);
+    expect(fetchGists).toHaveBeenCalledWith(1, "");
   });
 
   describe("search", () => {

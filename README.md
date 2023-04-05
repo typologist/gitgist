@@ -1,4 +1,5 @@
 # Gist Finder
+![Screenshot 2023-04-04 at 7 07 45 PM](https://user-images.githubusercontent.com/3059814/229955571-9ae5c6cd-7120-45f2-beee-3a6cf159439d.png)
 
 Sample app to show a list of gists, using the GitHub API.
 
